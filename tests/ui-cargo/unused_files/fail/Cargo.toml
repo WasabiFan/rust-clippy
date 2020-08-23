@@ -1,0 +1,9 @@
+
+# Content that triggers the lint goes here
+
+[package]
+name = "unused_files"
+version = "0.1.0"
+publish = false
+
+[workspace]

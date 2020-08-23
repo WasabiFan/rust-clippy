@@ -309,6 +309,7 @@ mod unnamed_address;
 mod unnecessary_sort_by;
 mod unnested_or_patterns;
 mod unsafe_removed_from_name;
+mod unused_files;
 mod unused_io_amount;
 mod unused_self;
 mod unused_unit;
@@ -843,6 +844,7 @@ pub fn register_plugins(store: &mut rustc_lint::LintStore, sess: &Session, conf:
         &unnecessary_sort_by::UNNECESSARY_SORT_BY,
         &unnested_or_patterns::UNNESTED_OR_PATTERNS,
         &unsafe_removed_from_name::UNSAFE_REMOVED_FROM_NAME,
+        &unused_files::UNUSED_FILES,
         &unused_io_amount::UNUSED_IO_AMOUNT,
         &unused_self::UNUSED_SELF,
         &unused_unit::UNUSED_UNIT,
@@ -1764,6 +1766,7 @@ pub fn register_plugins(store: &mut rustc_lint::LintStore, sess: &Session, conf:
     store.register_group(true, "clippy::cargo", Some("clippy_cargo"), vec![
         LintId::of(&cargo_common_metadata::CARGO_COMMON_METADATA),
         LintId::of(&multiple_crate_versions::MULTIPLE_CRATE_VERSIONS),
+        LintId::of(&unused_files::UNUSED_FILES),
         LintId::of(&wildcard_dependencies::WILDCARD_DEPENDENCIES),
     ]);
 

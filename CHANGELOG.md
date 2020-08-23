@@ -1773,6 +1773,7 @@ Released 2018-09-13
 [`unstable_as_mut_slice`]: https://rust-lang.github.io/rust-clippy/master/index.html#unstable_as_mut_slice
 [`unstable_as_slice`]: https://rust-lang.github.io/rust-clippy/master/index.html#unstable_as_slice
 [`unused_collect`]: https://rust-lang.github.io/rust-clippy/master/index.html#unused_collect
+[`unused_files`]: https://rust-lang.github.io/rust-clippy/master/index.html#unused_files
 [`unused_io_amount`]: https://rust-lang.github.io/rust-clippy/master/index.html#unused_io_amount
 [`unused_label`]: https://rust-lang.github.io/rust-clippy/master/index.html#unused_label
 [`unused_self`]: https://rust-lang.github.io/rust-clippy/master/index.html#unused_self

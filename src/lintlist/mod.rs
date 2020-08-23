@@ -2489,6 +2489,13 @@ pub static ref ALL_LINTS: Vec<Lint> = vec![
         module: "transmute",
     },
     Lint {
+        name: "unused_files",
+        group: "cargo",
+        desc: "default lint description",
+        deprecation: None,
+        module: "unused_files",
+    },
+    Lint {
         name: "unused_io_amount",
         group: "correctness",
         desc: "unused written/read amount",
