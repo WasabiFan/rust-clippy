@@ -1,12 +1,11 @@
-use rustc_lint::{EarlyLintPass, EarlyContext};
-use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_ast::ast::*;
-use rustc_data_structures::fx::FxHashSet;
-use walkdir::WalkDir;
 use crate::utils::span_lint;
-use rustc_span::{Span, source_map::DUMMY_SP, FileName};
-use std::error::Error;
 use if_chain::if_chain;
+use rustc_ast::ast::Crate;
+use rustc_data_structures::fx::FxHashSet;
+use rustc_lint::{EarlyContext, EarlyLintPass};
+use rustc_session::{declare_lint_pass, declare_tool_lint};
+use rustc_span::source_map::DUMMY_SP;
+use walkdir::WalkDir;
 
 declare_clippy_lint! {
     /// **What it does:**
@@ -32,19 +31,23 @@ declare_clippy_lint! {
 declare_lint_pass!(UnusedFiles => [UNUSED_FILES]);
 
 impl UnusedFiles {
-    fn get_all_crate_files(context: &EarlyContext) -> FxHashSet<String> {
+    fn get_all_crate_files(context: &EarlyContext<'_>) -> FxHashSet<String> {
         let source_map = context.sess.source_map();
 
         let mut visited = FxHashSet::default();
         for file in source_map.files().iter() {
-            let path = context.sess.working_dir.0.join(std::path::Path::new(&file.name.to_string()));
+            let path = context
+                .sess
+                .working_dir
+                .0
+                .join(std::path::Path::new(&file.name.to_string()));
             visited.insert(path.to_str().unwrap().to_string());
         }
 
         visited
     }
 
-    fn get_unused_files(context: &EarlyContext) -> Option<Vec<String>> {
+    fn get_unused_files(context: &EarlyContext<'_>) -> Option<Vec<String>> {
         let crate_files = Self::get_all_crate_files(context);
 
         let path = context.sess.local_crate_source_file.as_ref()?;
@@ -66,9 +69,13 @@ impl UnusedFiles {
                     }
                 },
                 Err(e) => {
-                    span_lint(context, UNUSED_FILES,
-                            DUMMY_SP, &format!("Error walking crate directory: {:?}", e));
-                }
+                    span_lint(
+                        context,
+                        UNUSED_FILES,
+                        DUMMY_SP,
+                        &format!("Error walking crate directory: {:?}", e),
+                    );
+                },
             }
         }
 
@@ -96,14 +103,14 @@ impl UnusedFiles {
 }
 
 impl EarlyLintPass for UnusedFiles {
-    fn check_crate(&mut self, context: &EarlyContext, _: &Crate) {
+    fn check_crate(&mut self, context: &EarlyContext<'_>, _: &Crate) {
         // let crate_files = Self::get_all_crate_files(context);
 
         if_chain! {
             if let Some(unused_files) = Self::get_unused_files(context);
-            if unused_files.len() > 0;
+            if !unused_files.is_empty();
             then {
-                span_lint(context, UNUSED_FILES, DUMMY_SP, 
+                span_lint(context, UNUSED_FILES, DUMMY_SP,
                     &format!("Found {} files within the Cargo source directory which aren't part of the module tree:\n{}\n", unused_files.len(), unused_files.join("\n")));
             }
         }
